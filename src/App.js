@@ -1,22 +1,30 @@
 import './App.css';
-import { useState, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 
 function App() {
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
-
-  const handleResize = () => {
-    setWindowWidth(window.innerWidth)
+  const [number, setNumber] = useState(0)
+  const [dark, setDark] = useState(false)
+  const doubleNumber = useMemo(() => {
+    return slowFun(number)
+  }, [number])
+  const themeStyles = {
+    backgroundColor: dark ? 'black' : 'white',
+    color: dark ? 'white' : dark
   }
-
-  useEffect(() => {
-    window.addEventListener('resize', handleResize)
-  }, [])
 
   return (
     <div className="App">
-      <div>{windowWidth}</div>
+      <input type="number" value={number} onChange={e => setNumber(parseInt(e.target.value))} />
+      <button onClick={() => setDark(prevDark => !prevDark)}>change theme</button>
+      <div style={themeStyles}>{doubleNumber}</div>
     </div>
   );
+}
+
+const slowFun = (num) => {
+  console.log('calling slow function')
+  for (let i = 0; i <= 1000000000; i++) { }
+  return num * 2
 }
 
 export default App;
